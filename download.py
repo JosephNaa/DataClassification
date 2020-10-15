@@ -15,17 +15,21 @@ gender_net = cv2.dnn.readNetFromCaffe(
 
 def ClassifyGender(fileURL, tag, cnt):
     pathlib.Path('./' + tag).mkdir(exist_ok=True)
-    pathlib.Path('./male').mkdir(exist_ok=True)
-    pathlib.Path('./more').mkdir(exist_ok=True)
-    pathlib.Path('./etccc').mkdir(exist_ok=True)
+    pathlib.Path('./' + tag + '_male').mkdir(exist_ok=True)
+    pathlib.Path('./' + tag + '_more').mkdir(exist_ok=True)
+    pathlib.Path('./' + tag + '_except').mkdir(exist_ok=True)
+    pathlib.Path('./' + tag + '_not_detect').mkdir(exist_ok=True)
 
     resp = urllib.request.urlopen(fileURL)
     img = np.asarray(bytearray(resp.read()), dtype="uint8")
     img = cv2.imdecode(img, cv2.IMREAD_COLOR)
 
     faces = detector(img)
+    #print(faces)
 
     print('Downloading image...' + str(cnt))
+    if not faces:
+        cv2.imwrite('./not_detect/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
 
     for face in faces:
         x1, y1, x2, y2 = face.left(), face.top(), face.right(), face.bottom()
@@ -43,11 +47,11 @@ def ClassifyGender(fileURL, tag, cnt):
             if gender == 'Female':
                 cv2.imwrite('./' + tag + '/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
             else:
-                cv2.imwrite('./male/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
+                cv2.imwrite('./' + tag + '_male/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
 
         except Exception as e:
             print(str(e))
-            cv2.imwrite('./etccc/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
+            cv2.imwrite('./' + tag + '_except/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
 
 def DownloadFile(fileURL, tag, cnt):
     print('Downloading image...' + str(cnt))

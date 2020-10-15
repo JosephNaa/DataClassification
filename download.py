@@ -3,8 +3,51 @@ import pathlib
 import cv2
 import numpy as np
 import json
+import dlib
 
 face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
+gender_list = ['Male', 'Female']
+detector = dlib.get_frontal_face_detector()
+gender_net = cv2.dnn.readNetFromCaffe(
+    './models/deploy_gender.prototxt',
+    './models/gender_net.caffemodel'
+)
+
+def ClassifyGender(fileURL, tag, cnt):
+    pathlib.Path('./' + tag).mkdir(exist_ok=True)
+    pathlib.Path('./male').mkdir(exist_ok=True)
+    pathlib.Path('./more').mkdir(exist_ok=True)
+    pathlib.Path('./etccc').mkdir(exist_ok=True)
+
+    resp = urllib.request.urlopen(fileURL)
+    img = np.asarray(bytearray(resp.read()), dtype="uint8")
+    img = cv2.imdecode(img, cv2.IMREAD_COLOR)
+
+    faces = detector(img)
+
+    print('Downloading image...' + str(cnt))
+
+    for face in faces:
+        x1, y1, x2, y2 = face.left(), face.top(), face.right(), face.bottom()
+        face_img = img[y1:y2, x1:x2].copy()
+
+        try:
+            blob = cv2.dnn.blobFromImage(face_img, scalefactor=1, size=(227, 227),
+                                     mean=(78.4263377603, 87.7689143744, 114.895847746),
+                                     swapRB=False, crop=False)
+
+            gender_net.setInput(blob)
+            gender_preds = gender_net.forward()
+            gender = gender_list[gender_preds[0].argmax()]
+
+            if gender == 'Female':
+                cv2.imwrite('./' + tag + '/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
+            else:
+                cv2.imwrite('./male/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
+
+        except Exception as e:
+            print(str(e))
+            cv2.imwrite('./etccc/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
 
 def DownloadFile(fileURL, tag, cnt):
     print('Downloading image...' + str(cnt))
@@ -38,10 +81,11 @@ def DownloadFile(fileURL, tag, cnt):
 
 
 if __name__ == '__main__':
-    with open('C:/Users/Joseph/PycharmProjects/datavoucher/selfie.json', 'rt', encoding='UTF-8') as data_file:
+    tag = 'selfie'
+
+    with open('./' + tag + '.json', 'rt', encoding='UTF-8') as data_file:
         data = json.load(data_file)
 
-    tag = 'selfie'
     for i in range(0, len(data)):
         instagramURL = data[i]['img_url']
-        DownloadFile(instagramURL, tag, i)
+        ClassifyGender(instagramURL, tag, i)

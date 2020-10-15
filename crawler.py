@@ -1,10 +1,6 @@
 from time import sleep
-
 from tqdm import tqdm
-
 from browser import Browser
-
-
 
 class InstaCrawler():
     URL = "https://www.instagram.com"
@@ -48,8 +44,9 @@ class InstaCrawler():
                     dict_post["caption"] = element_img.get_attribute("alt")
                     dict_post["img_url"] = element_img.get_attribute("src")
 
-                    key_set.add(key)
-                    posts.append(dict_post)
+                    if '사람' in dict_post['caption']:
+                        key_set.add(key)
+                        posts.append(dict_post)
 
                     if len(posts) == num:
                         break

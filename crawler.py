@@ -14,9 +14,9 @@ class InstaCrawler():
         url = "%s/accounts/login/" % (InstaCrawler.URL)
         browser.get(url)
         u_input = browser.find_one('input[name="username"]')
-        u_input.send_keys('01044062835')
+        u_input.send_keys('')
         p_input = browser.find_one('input[name="password"]')
-        p_input.send_keys('vancouver@1136')
+        p_input.send_keys('')
 
         login_btn = browser.find_one(".L3NKy")
         login_btn.click()

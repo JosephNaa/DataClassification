@@ -16,11 +16,11 @@ gender_net = cv2.dnn.readNetFromCaffe(
 
 
 def ClassifyGender(fileURL, tag, cnt):
-    pathlib.Path('./' + tag).mkdir(exist_ok=True)
-    pathlib.Path('./' + tag + '_male').mkdir(exist_ok=True)
-    pathlib.Path('./' + tag + '_more').mkdir(exist_ok=True)
-    pathlib.Path('./' + tag + '_except').mkdir(exist_ok=True)
-    pathlib.Path('./' + tag + '_not_detect').mkdir(exist_ok=True)
+    pathlib.Path('./img/' + tag).mkdir(exist_ok=True)
+    pathlib.Path('./img/' + tag + '_male').mkdir(exist_ok=True)
+    pathlib.Path('./img/' + tag + '_more').mkdir(exist_ok=True)
+    pathlib.Path('./img/' + tag + '_except').mkdir(exist_ok=True)
+    pathlib.Path('./img/' + tag + '_not_detect').mkdir(exist_ok=True)
 
     resp = urllib.request.urlopen(fileURL)
     img = np.asarray(bytearray(resp.read()), dtype="uint8")
@@ -32,10 +32,10 @@ def ClassifyGender(fileURL, tag, cnt):
     print('Downloading image...' + str(cnt))
 
     if len(faces) > 1:
-        cv2.imwrite('./' + tag + '_more/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
+        cv2.imwrite('./img/' + tag + '_more/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
 
     elif not faces:
-        cv2.imwrite('./' + tag + '_not_detect/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
+        cv2.imwrite('./img/' + tag + '_not_detect/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
 
     else:
         x1, y1, x2, y2 = faces[0].left(), faces[0].top(), faces[0].right(), faces[0].bottom()
@@ -51,13 +51,13 @@ def ClassifyGender(fileURL, tag, cnt):
             gender = gender_list[gender_preds[0].argmax()]
 
             if gender == 'Female':
-                cv2.imwrite('./' + tag + '/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
+                cv2.imwrite('./img/' + tag + '/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
             else:
-                cv2.imwrite('./' + tag + '_male/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
+                cv2.imwrite('./img/' + tag + '_male/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
 
         except Exception as e:
             print(str(e))
-            cv2.imwrite('./' + tag + '_except/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
+            cv2.imwrite('./img/' + tag + '_except/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
 
 
 if __name__ == '__main__':

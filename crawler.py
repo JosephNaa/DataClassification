@@ -20,6 +20,7 @@ class InstaCrawler():
 
         login_btn = browser.find_one(".L3NKy")
         login_btn.click()
+        sleep(10)
 
     def get_posts_tag(self, tag, num):
         url = "%s/explore/tags/%s/" % (InstaCrawler.URL, tag)

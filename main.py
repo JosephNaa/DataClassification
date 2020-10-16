@@ -47,6 +47,3 @@ if __name__ == "__main__":
 ##############################################
 # python crawler.py hashtag -t selfie -o ./output.json -n 10000
 ##############################################
-
-# selfie, girl, makeup, beauty
-# lip, model

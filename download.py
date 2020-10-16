@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import json
 import dlib
+import argparse
 
 face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
 gender_list = ['Male', 'Female']
@@ -28,6 +29,7 @@ def ClassifyGender(fileURL, tag, cnt):
     #print(faces)
 
     print('Downloading image...' + str(cnt))
+
     if not faces:
         cv2.imwrite('./not_detect/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
 
@@ -85,11 +87,20 @@ def DownloadFile(fileURL, tag, cnt):
 
 
 if __name__ == '__main__':
-    tag = 'selfie'
+    parser = argparse.ArgumentParser()
 
-    with open('./' + tag + '.json', 'rt', encoding='UTF-8') as data_file:
+    parser.add_argument("-t", "--tag")
+
+    args = parser.parse_args()
+
+    with open('./' + args.tag + '.json', 'rt', encoding='UTF-8') as data_file:
         data = json.load(data_file)
 
     for i in range(0, len(data)):
         instagramURL = data[i]['img_url']
-        ClassifyGender(instagramURL, tag, i)
+        ClassifyGender(instagramURL, args.tag, i)
+
+
+#####################################
+# python download.py -t selfie
+#####################################

@@ -3,7 +3,6 @@
 import argparse
 import json
 from crawler import InstaCrawler
-from download import DownloadFile
 from download import ClassifyGender
 
 
@@ -31,17 +30,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     output(get_posts(args.tag, args.number or 10000), args.output)
-"""
-    with open('C:/Users/goQba-D01/PycharmProjects/DataClassification/' + args.tag + '.json', 'rt', encoding='UTF-8') as data_file:
+
+    with open('./' + args.tag + '.json', 'rt', encoding='UTF-8') as data_file:
         data = json.load(data_file)
 
     for i in range(0, len(data)):
         instagramURL = data[i]['img_url']
-        #print(instagramURL)
         ClassifyGender(instagramURL, args.tag, i)
 
     print('done')
-"""
+
 
 
 ##############################################

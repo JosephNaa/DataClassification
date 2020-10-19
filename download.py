@@ -49,6 +49,7 @@ def ClassifyGender(fileURL, tag, cnt):
             gender_net.setInput(blob)
             gender_preds = gender_net.forward()
             gender = gender_list[gender_preds[0].argmax()]
+            print(gender_preds[0].argmax())
 
             if gender == 'Female':
                 cv2.imwrite('./img/' + tag + '/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
@@ -57,9 +58,10 @@ def ClassifyGender(fileURL, tag, cnt):
 
         except Exception as e:
             print(str(e))
+
             cv2.imwrite('./img/' + tag + '_except/' + tag + '_' + str("%06d" % cnt) + '.jpg', img)
 
-
+"""
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
@@ -74,7 +76,7 @@ if __name__ == '__main__':
         instagramURL = data[i]['img_url']
         ClassifyGender(instagramURL, args.tag, i)
 
-
+"""
 #####################################
 # python download.py -t selfie
 #####################################

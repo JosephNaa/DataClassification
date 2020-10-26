@@ -3,7 +3,6 @@
 import argparse
 import json
 from crawler import InstaCrawler
-from download import DownloadFile
 from download import ClassifyGender
 
 
@@ -40,7 +39,7 @@ if __name__ == "__main__":
         #print(instagramURL)
         ClassifyGender(instagramURL, args.tag, i)
 
-    print('done')
+    print(args.tag + ' done')
 """
 
 
